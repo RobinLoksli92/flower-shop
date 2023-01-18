@@ -1,39 +1,47 @@
-from django.shortcuts import render
-import json
+from django.views.generic import ListView, View, DetailView, TemplateView
+from django.views.generic.detail import TemplateResponseMixin
+from django.views.generic.list import BaseListView, MultipleObjectTemplateResponseMixin, ContextMixin
+from .models import Bouquet
 
 
-def card(request):
-    return render(request, 'card.html', context={})
+class BouquetListView(ListView):
+    model = Bouquet
+    context_object_name = 'bouquets' # Переменная, которая попадает в шаблон
+    template_name = "flower_order/index.html"
 
 
-def catalog(request):
-    return render(request, 'catalog.html', context={})
+class CatalogListView(ListView):
+    model = Bouquet
+    context_object_name = 'bouquets'
+    template_name = "flower_order/catalog.html"
 
 
-def consultation(request):
-    return render(request, 'consultation.html', context={})
+class Consultation(TemplateView):
+    template_name = "flower_order/consultation.html"
 
 
-def index(request):
-    return render(request, 'index.html', context={})
+class Order(TemplateView):
+    template_name = "flower_order/order.html"
 
 
-def order_step(request):
-    return render(request, 'order-step.html', context={})
+class OrderStep(TemplateView):
+    def get(self, request, *args, **kwargs):
+        context = super().get(request, *args, **kwargs)
+        if self.request.GET:
+            print(self.request.GET)
+            context['delivery_data'] = self.request.GET
+            # Добавить еще логики
+        return context
+    template_name = "flower_order/order-step.html"
 
 
-def order(request):
-    return render(request, 'order.html', context={})
+class Quiz(TemplateView):
+    template_name = "flower_order/quiz.html"
 
 
-def card(request):
-    return render(request, 'card.html', context={})
+class Result(TemplateView):
+    template_name = "flower_order/result.html"
 
 
-def quiz(request):
-    return render(request, 'quiz.html', context={})
-
-
-def result(request):
-    return render(request, 'result.html', context={})
-
+class Card(TemplateView):
+    template_name = "flower_order/card.html"
